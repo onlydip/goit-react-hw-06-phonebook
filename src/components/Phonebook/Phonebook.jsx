@@ -1,4 +1,5 @@
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import actions from '../redux/actions';
 import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import {
@@ -9,70 +10,54 @@ import {
   Error,
 } from './Phonebook.styled';
 
-const schema = yup.object().shape({
-  name: yup
-    .string()
-    .matches(
-      /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-      'Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d\'Artagnan'
-    )
-    .required('This field cannot be empty'),
-  number: yup
-    .string()
-    .matches(
-      /\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}/,
-      'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
-    )
-    .min(6, 'Phone number is too short')
-    .max(18, 'Phone number is too long')
-    .required('This field cannot be empty'),
-});
+export default function Phonebook() {
+  const dispatch = useDispatch();
 
-export default function Phonebook({ onSubmit }) {
+  const schema = yup.object().shape({
+    name: yup.string().required('This field cannot be empty'),
+    number: yup.string().min(6).max(18).required('This field cannot be empty'),
+  });
+
   const handleSubmit = (values, { resetForm }) => {
-    onSubmit(values);
+    dispatch(actions.addContact(values));
     resetForm();
   };
 
   return (
-    <Formik
-      initialValues={{ name: '', number: '' }}
-      validationSchema={schema}
-      onSubmit={handleSubmit}
-    >
-      {({ handleSubmit }) => (
+    <>
+      <Formik
+        initialValues={{ name: '', number: '' }}
+        validationSchema={schema}
+        onSubmit={handleSubmit}
+      >
         <Main>
-          <PhonebookForm>
-            <label htmlFor="name">
-              Name:
-              <PhonebookInput
-                id="name"
-                type="text"
-                name="name"
-                placeholder="Enter name"
-              />
-              <ErrorMessage name="name" component={Error} />
-            </label>
+          <PhonebookForm htmlFor="name">
+            Name:
+            <PhonebookInput
+              name="name"
+              type="text"
+              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+            />
+            <ErrorMessage
+              name="name"
+              render={message => <Error>{message}</Error>}
+            />
           </PhonebookForm>
-          <PhonebookForm>
-            <label htmlFor="number">
-              Number:
-              <PhonebookInput
-                id="number"
-                type="tel"
-                name="number"
-                placeholder="Enter number"
-              />
-              <ErrorMessage name="number" component={Error} />
-            </label>
+          <PhonebookForm htmlFor="number">
+            Number:
+            <PhonebookInput
+              name="number"
+              type="tel"
+              title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            />
+            <ErrorMessage
+              render={message => <Error>{message}</Error>}
+              name="number"
+            />
           </PhonebookForm>
           <Button type="submit">Add contact</Button>
         </Main>
-      )}
-    </Formik>
+      </Formik>
+    </>
   );
 }
-
-Phonebook.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
