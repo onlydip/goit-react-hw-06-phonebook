@@ -1,7 +1,4 @@
-
 import { MdPhone } from 'react-icons/md';
-
-
 import {
   ListItem,
   ItemName,

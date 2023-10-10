@@ -1,13 +1,15 @@
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import actions from '../redux/actions';
+import { changeFilter } from '../redux/reducer'; 
+
 import { FilterLabel, FilterInput } from './ContactFilter.styled';
 
 export default function Filter({ title }) {
-  const value = useSelector(state => state.contacts.filter);
+  const value = useSelector(state => state.contacts.filter); 
   const dispatch = useDispatch();
+
   const changeFilterValue = e => {
-    dispatch(actions.changeFilter(e.currentTarget.value));
+    dispatch(changeFilter(e.currentTarget.value)); 
   };
 
   return (

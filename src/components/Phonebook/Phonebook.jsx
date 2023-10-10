@@ -1,14 +1,9 @@
+
 import { useDispatch } from 'react-redux';
-import actions from '../redux/actions';
 import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
-import {
-  Main,
-  PhonebookForm,
-  PhonebookInput,
-  Button,
-  Error,
-} from './Phonebook.styled';
+import { Main, PhonebookForm, PhonebookInput, Button, Error } from './Phonebook.styled';
+import { addContact } from '../redux/reducer';
 
 export default function Phonebook() {
   const dispatch = useDispatch();
@@ -19,7 +14,7 @@ export default function Phonebook() {
   });
 
   const handleSubmit = (values, { resetForm }) => {
-    dispatch(actions.addContact(values));
+    dispatch(addContact(values));
     resetForm();
   };
 
@@ -38,10 +33,7 @@ export default function Phonebook() {
               type="text"
               title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             />
-            <ErrorMessage
-              name="name"
-              render={message => <Error>{message}</Error>}
-            />
+            <ErrorMessage name="name" render={message => <Error>{message}</Error>} />
           </PhonebookForm>
           <PhonebookForm htmlFor="number">
             Number:
@@ -50,10 +42,7 @@ export default function Phonebook() {
               type="tel"
               title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             />
-            <ErrorMessage
-              render={message => <Error>{message}</Error>}
-              name="number"
-            />
+            <ErrorMessage name="number" render={message => <Error>{message}</Error>} />
           </PhonebookForm>
           <Button type="submit">Add contact</Button>
         </Main>

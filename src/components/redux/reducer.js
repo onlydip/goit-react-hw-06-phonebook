@@ -1,29 +1,39 @@
+
+import { createSlice } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
-import { combineReducers } from 'redux';
-import { createReducer } from '@reduxjs/toolkit';
-import actions from './actions';
 
-const items = createReducer([], {
-  [actions.addContact]: (state, { payload: { name, number } }) => {
-    return [
-      ...state,
-      {
-        id: nanoid(),
-        name,
-        number,
-      },
-    ];
+const initialState = {
+  items: [],
+  filter: '',
+};
+
+const phonebookSlice = createSlice({
+  name: 'phonebook',
+  initialState,
+  reducers: {
+    addContact: (state, action) => {
+      const { name, number } = action.payload;
+
+      const existingContact = state.items.find(contact => contact.name.toLowerCase() === name.toLowerCase());
+
+      if (existingContact) {
+        alert('The contact is already in use!');
+        return;
+      }
+
+      state.items.push({ id: nanoid(), name, number });
+    },
+    delContact: (state, action) => {
+      const contactId = action.payload;
+
+      state.items = state.items.filter(contact => contact.id !== contactId);
+    },
+    changeFilter: (state, action) => {
+      state.filter = action.payload;
+    },
   },
-
-  [actions.delContact]: (state, { payload }) =>
-    state.filter(({ id }) => id !== payload),
 });
 
-const filter = createReducer('', {
-  [actions.changeFilter]: (state, { payload }) => payload,
-});
+export const { addContact, delContact, changeFilter } = phonebookSlice.actions;
 
-export default combineReducers({
-  items,
-  filter,
-});
+export default phonebookSlice.reducer;

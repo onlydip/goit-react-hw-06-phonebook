@@ -1,8 +1,8 @@
-import  ContactsItem  from '../ContactsItem/index';
+import ContactsItem from '../ContactsItem/index';
 import { List } from './ContactsList.styled';
 import { getFilteredContacts } from '../redux/selectors';
 import { useDispatch, useSelector } from 'react-redux';
-import actions from '../redux/actions';
+import { delContact } from '../redux/reducer'; 
 
 export default function Contacts() {
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ export default function Contacts() {
       {filteredContacts.map(({ id, name, number }) => (
         <ContactsItem
           key={id}
-          deleteContact={() => dispatch(actions.delContact(id))}
+          deleteContact={() => dispatch(delContact(id))} 
           name={name}
           number={number}
         />

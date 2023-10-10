@@ -3,17 +3,23 @@ import Section from 'components/Section';
 import Phonebook from 'components/Phonebook';
 import ContactsList from 'components/ContactsList';
 import ContactFilter from 'components/ContactFilter';
-
-
+import { useSelector } from 'react-redux';
+import { FirstTitle, SecondTitle,WithoutContacts } from './App.styled';
 
 export default function App() {
+const contacts = useSelector(state => state.contacts.items);
+  
   return (
     <Section>
-      <h1>Phonebook</h1>
+      <FirstTitle>Phonebook</FirstTitle>
       <Phonebook title="Phonebook" />
       <ContactFilter title="Find contacts by name:" />
-      <h2>Contacts</h2>
-      <ContactsList title="Contacts" />
+      <SecondTitle>Contacts</SecondTitle>
+      {contacts.length === 0 ? (
+        <WithoutContacts>There are no contacts in your phonebook</WithoutContacts>
+      ) : (
+          <ContactsList title="Contacts" />
+          )}
     </Section>
   );
 }
